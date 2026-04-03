@@ -1,13 +1,10 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
-import deno from "@astrojs/deno";
+import vercel from "@astrojs/vercel";
 
 // https://astro.build/config
 export default defineConfig({
   output: "server",
-  adapter: deno({
-    port: Number(Deno.env.get("PORT") || 8085),
-    hostname: "0.0.0.0",
-  }),
+  adapter: vercel(),
   integrations: [tailwind()],
 });
