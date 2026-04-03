@@ -1,0 +1,120 @@
+---
+import Layout from "@layouts/Layout.astro";
+import ProductCard from "@components/ProductCard.astro";
+import { getProducts, getTags } from "@lib/api";
+
+const search = Astro.url.searchParams.get("search") || undefined;
+const tag = Astro.url.searchParams.get("tag") || undefined;
+const [products, tags] = await Promise.all([
+  getProducts(search, tag),
+  getTags(),
+]);
+
+// Map Notion colors to Hex (Duplicate from Layout for now, could be in a util)
+const colorMap: Record<string, string> = {
+  default: "#787774",
+  gray: "#9B9A97",
+  brown: "#64473A",
+  orange: "#D9730D",
+  yellow: "#DFAB01",
+  green: "#0F7B6C",
+  blue: "#0B6E99",
+  purple: "#6940A5",
+  pink: "#AD1A72",
+  red: "#E03E3E",
+};
+
+const tagColorMap = new Map(tags.map((t) => [t.name, colorMap[t.color]]));
+---
+
+<Layout title="Catalog">
+  <main class="max-w-7xl mx-auto px-6">
+    <header class="py-4 md:py-8 text-center mb-4 relative">
+      {
+        (search || tag) && (
+          <a
+            href="/"
+            class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[14px] tracking-[0.1em] font-bold uppercase opacity-50 hover:opacity-100 transition-opacity"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="3"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Ver todos
+          </a>
+        )
+      }
+      <span
+        class="text-[20px] tracking-[0.5em] font-extrabold uppercase mb-2 block text-[#1a1a1a]/70 opacity-0 animate-[fadeIn_0.6s_ease_forwards]"
+      >
+        2026
+      </span>
+      <h1
+        class={`font-black uppercase leading-none mb-6 text-[#1a1a1a] ${search || tag ? "text-xl md:text-2xl tracking-widest" : "text-4xl md:text-6xl tracking-[-0.02em]"}`}
+      >
+        {
+          tag
+            ? `Etiqueta: ${tag}`
+            : search
+              ? `Resultados: ${search}`
+              : "Explorar Productos"
+        }
+      </h1>
+      <div
+        class="w-12 h-[1px] bg-black absolute left-1/2 -translate-x-1/2 opacity-20"
+      >
+      </div>
+    </header>
+
+    {
+      products.length === 0 ? (
+        <div class="text-center py-40 border border-dashed border-black/10 opacity-30">
+          <p class="text-[11px] tracking-[0.2em] uppercase text-[#1a1a1a]">
+            Disculpas, no hay productos disponibles.
+          </p>
+        </div>
+      ) : (
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+          {products.map((product) => (
+            <ProductCard product={product} />
+          ))}
+        </section>
+      )
+    }
+
+    <!-- Minimalist Pagination / Load More (Placeholder)
+    <div class="mt-24 text-center">
+      <a
+        href="#"
+        class="inline-block text-[10px] tracking-[0.3em] font-bold uppercase border-b border-white/20 pb-2 hover:border-white transition-colors"
+      >
+        Load More
+      </a>
+    </div> -->
+  </main>
+</Layout>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 0.3;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in {
+    animation: fade-in 1s ease-out forwards;
+  }
+</style>
