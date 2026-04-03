@@ -58,67 +58,70 @@ const colorMap: Record<string, string> = {
       class="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-black/5"
     >
       <nav
-        class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between font-['Inter']"
+        class="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between font-['Inter']"
       >
-        <div class="hidden md:flex items-center gap-8">
+        <div class="flex items-center gap-4 md:gap-8">
           <div class="relative group">
-            <button
-              class="flex items-center gap-2 text-[12px] font-bold tracking-[0.2em] uppercase hover:opacity-50 transition-opacity"
-            >
-              CATEGORIAS
-              <svg
-                class="w-2.5 h-2.5 opacity-40 transition-transform group-hover:rotate-180"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            <details class="group/menu appearance-none list-none">
+              <summary
+                class="list-none cursor-pointer flex items-center gap-2 text-[10px] md:text-[12px] font-bold tracking-[0.2em] uppercase hover:opacity-50 transition-opacity"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="3"
-                  d="M19 9l-7 7-7-7"></path>
-              </svg>
-            </button>
+                CATEGORIAS
+                <svg
+                  class="w-2.5 h-2.5 opacity-40 transition-transform group-open/menu:rotate-180"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </summary>
 
-            <!-- Dropdown Menu -->
-            <div
-              class="absolute top-full left-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
-            >
+              <!-- Dropdown Menu -->
               <div
-                class="bg-white/95 border border-black/10 shadow-2xl backdrop-blur-xl min-w-[220px]"
+                class="absolute top-full left-0 pt-4 z-[100] animate-[fadeIn_0.2s_ease-out]"
               >
-                <div class="py-3 px-2">
-                  {
-                    tags.map((tag) => (
-                      <a
-                        href={`/?tag=${tag.name}`}
-                        class="flex items-center gap-3 px-6 py-3 text-[10px] tracking-[0.1em] uppercase font-bold hover:bg-black/5 transition-colors group/item"
-                      >
-                        <span
-                          class="w-2 h-2 rounded-full ring-4 ring-black/5"
-                          style={`background-color: ${colorMap[tag.color] || colorMap.default}`}
-                        />
-                        <span class="text-[#1a1a1a] group-hover/item:translate-x-1 transition-transform">
-                          {tag.name}
-                        </span>
-                      </a>
-                    ))
-                  }
+                <div
+                  class="bg-white border border-black/10 shadow-2xl backdrop-blur-xl min-w-[200px] md:min-w-[220px]"
+                >
+                  <div class="py-3 px-2">
+                    {
+                      tags.map((tag) => (
+                        <a
+                          href={`/?tag=${tag.name}`}
+                          class="flex items-center gap-3 px-6 py-3 text-[10px] tracking-[0.1em] uppercase font-bold hover:bg-black/5 transition-colors group/item"
+                        >
+                          <span
+                            class="w-2 h-2 rounded-full ring-4 ring-black/5"
+                            style={`background-color: ${colorMap[tag.color] || colorMap.default}`}
+                          />
+                          <span class="text-[#1a1a1a] group-hover/item:translate-x-1 transition-transform">
+                            {tag.name}
+                          </span>
+                        </a>
+                      ))
+                    }
+                  </div>
                 </div>
               </div>
-            </div>
+            </details>
           </div>
         </div>
 
         <a
           href="/"
-          class="absolute left-1/2 -translate-x-1/2 text-lg font-black tracking-[0.3em] uppercase text-[#1a1a1a]"
+          id="header-logo"
+          class="absolute left-1/2 -translate-x-1/2 text-sm md:text-lg font-black tracking-[0.2em] md:tracking-[0.3em] uppercase text-[#1a1a1a] whitespace-nowrap transition-opacity duration-300"
         >
           Un Poco de Todo
         </a>
 
         <div
-          class="flex items-center gap-6 text-[12px] font-bold tracking-[0.2em] uppercase relative"
+          class="flex items-center gap-6 text-[10px] font-bold tracking-[0.2em] uppercase relative md:text-[12px]"
         >
           <!-- Search UI -->
           <div
@@ -139,7 +142,7 @@ const colorMap: Record<string, string> = {
                 type="text"
                 id="search-input"
                 placeholder="ESCRIBE AQUÍ..."
-                class="bg-transparent border-none focus:ring-0 text-[10px] py-1 w-[200px] uppercase placeholder:opacity-100"
+                class="bg-transparent border-none focus:ring-0 text-[13px] md:text-[10px] py-1 w-[140px] md:w-[200px] uppercase placeholder:opacity-100"
               />
               <button
                 id="search-close"
@@ -242,12 +245,17 @@ const colorMap: Record<string, string> = {
     const wrapper = document.getElementById("search-input-wrapper");
     const input = document.getElementById("search-input") as HTMLInputElement;
 
-    if (!toggle || !close || !wrapper || !input) return;
+    const logo = document.getElementById("header-logo");
+
+    if (!toggle || !close || !wrapper || !input || !logo) return;
 
     toggle.addEventListener("click", () => {
       wrapper.classList.remove("opacity-0", "invisible", "translate-x-4");
       wrapper.classList.add("opacity-100", "visible", "translate-x-0");
       toggle.classList.add("opacity-0", "invisible");
+      if (window.innerWidth < 768) {
+        logo.classList.add("opacity-0", "invisible");
+      }
       input.focus();
     });
 
@@ -255,6 +263,7 @@ const colorMap: Record<string, string> = {
       wrapper.classList.add("opacity-0", "invisible", "translate-x-4");
       wrapper.classList.remove("opacity-100", "visible", "translate-x-0");
       toggle.classList.remove("opacity-0", "invisible");
+      logo.classList.remove("opacity-0", "invisible");
       input.value = "";
     });
 

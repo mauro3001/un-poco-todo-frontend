@@ -29,15 +29,15 @@ const tagColorMap = new Map(tags.map((t) => [t.name, colorMap[t.color]]));
 
 <Layout title="Catalog">
   <main class="max-w-7xl mx-auto px-6">
-    <header class="py-4 md:py-8 text-center mb-4 relative">
+    <header class="py-4 md:py-8 text-center mb-4 relative px-2">
       {
         (search || tag) && (
           <a
             href="/"
-            class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-2 text-[14px] tracking-[0.1em] font-bold uppercase opacity-50 hover:opacity-100 transition-opacity"
+            class="inline-flex md:absolute left-0 top-1/2 md:-translate-y-1/2 items-center gap-2 text-[12px] md:text-[14px] tracking-[0.1em] font-bold uppercase opacity-50 hover:opacity-100 transition-opacity mb-4 md:mb-0"
           >
             <svg
-              class="w-4 h-4"
+              class="w-3 h-3 md:w-4 md:h-4"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -54,12 +54,16 @@ const tagColorMap = new Map(tags.map((t) => [t.name, colorMap[t.color]]));
         )
       }
       <span
-        class="text-[20px] tracking-[0.5em] font-extrabold uppercase mb-2 block text-[#1a1a1a]/70 opacity-0 animate-[fadeIn_0.6s_ease_forwards]"
+        class="text-[14px] md:text-[20px] tracking-[0.5em] font-extrabold uppercase mb-2 block text-[#1a1a1a]/70 opacity-0 animate-[fadeIn_0.6s_ease_forwards]"
       >
         2026
       </span>
       <h1
-        class={`font-black uppercase leading-none mb-6 text-[#1a1a1a] ${search || tag ? "text-xl md:text-2xl tracking-widest" : "text-4xl md:text-6xl tracking-[-0.02em]"}`}
+        class={`font-black uppercase leading-none mb-6 text-[#1a1a1a] ${
+          search || tag
+            ? "text-lg md:text-2xl tracking-widest px-4"
+            : "text-3xl md:text-6xl tracking-[-0.02em]"
+        }`}
       >
         {
           tag
