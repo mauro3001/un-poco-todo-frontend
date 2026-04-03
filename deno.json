@@ -1,0 +1,8 @@
+{
+  "tasks": {
+    "start": "deno run -A --unstable-kv ./dist/server/entry.mjs",
+    "build": "pnpm install && pnpm build",
+    "dev": "pnpm dev"
+  },
+  "unstable": ["kv"]
+}
